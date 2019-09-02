@@ -4,7 +4,7 @@ def isfloat(string):
     i = 0
     isnumber = True
     while  i < len(array) and array[i].isnumeric():
-        i = i + 1
+        i = i + 1        
     return i < len(array) or array[i].isnumeric()        
         
 
