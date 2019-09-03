@@ -1,8 +1,7 @@
 
 def isfloat(string):
     array = string.split('.')
-    i = 0
-    isnumber = True
+    i = 0    
     while  i < len(array) and array[i].isnumeric():
         i = i + 1        
     return i < len(array) or array[i].isnumeric()        
@@ -20,18 +19,23 @@ class Arbol:
         self.root = root
         self.left = left
         self.right = right
+
+    def __init__(self):
+        pass
         
     def addToTree(self, symbol):
         if isfloat(symbol):
             if self.left == None:
                 self.left = symbol
-            elif type(self.right) == 'Arbol':
-                self.right.addToTree(symbol)
-            else:
+            elif self.right = None:
                 self.right = symbol
+            else:
+                self.right.addToTree(symbol)
         elif symbol in ('+','-','*','/','%'):
             if (self.root == None):
                 self.root = symbol
+            elif not self.right == None:
+                self.right.addToTree(symbol)
             else:
                 self.right = Arbol(symbol)
         else:
