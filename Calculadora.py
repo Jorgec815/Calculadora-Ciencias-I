@@ -1,10 +1,13 @@
 
 def isfloat(string):
     array = string.split('.')
-    i = 0    
-    while  i < len(array) and array[i].isnumeric():
-        i = i + 1        
-    return i < len(array) or array[i].isnumeric()        
+    i= 0
+    isnumber = True
+    while not(isnumber) or i<len(array):
+        if not(array[i].isnumeric()):
+            isnumer = False
+        i = i+1
+    return isnumber
         
 
 class Arbol:
@@ -24,31 +27,44 @@ class Arbol:
         pass
         
     def addToTree(self, symbol):
+        print(symbol)
         if isfloat(symbol):
             if self.left == None:
                 self.left = symbol
-            elif self.right = None:
+            elif self.right == None:
                 self.right = symbol
             else:
+                self.right = Arbol()
                 self.right.addToTree(symbol)
         elif symbol in ('+','-','*','/','%'):
             if (self.root == None):
                 self.root = symbol
-            elif not self.right == None:
-                self.right.addToTree(symbol)
-            else:
+            elif (self.right == None):
                 self.right = Arbol(symbol)
+            else:
+                self.right.addToTree(symbol)
+            
         else:
              print('no es posible computar el input')
 
-def getInput(tree, string):
+def getInput(tree,string):
     array = string.split()
+    array.reverse()
     for i in range(len(array)):
         tree.addToTree(array[i])
 
 def recorrer(tree):
     if(type(tree.right) == 'Arbol'):
-        return recorrer(tree.right)
+        if(tree.right.root == '+'):
+            return tree.left + recorrer(tree.right)
+        elif(tree.right.root == '-'):
+            return tree.left - recorrer(tree.right)
+        elif(tree.right.root == '*'):
+            return tree.left * recorrer(tree.right)
+        elif(tree.right.root == '/'):
+            return tree.left / recorrer(tree.right)
+        elif(tree.right.root == '%'):
+            return tree.left % recorrer(tree.right)
     else:       
         fRight = float(tree.right)
         fLeft = float(tree.left)
@@ -64,6 +80,6 @@ def recorrer(tree):
             return fRight % fLeft    
         
 cadena = input()
-arbol = Arbol(None)
+arbol = Arbol()
 getInput(arbol, cadena)
 recorrer(arbol)
