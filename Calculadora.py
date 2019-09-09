@@ -1,4 +1,4 @@
-
+#Determina si el string pasado como parametro corresponde a un numero, para poder distinguir entre variables y operados en el momento de hacer la insercion en el arbol
 def isfloat(string):
     array = string.split('.')  
     i = 0
@@ -9,52 +9,56 @@ def isfloat(string):
         i = i+1
     return isnumber
         
-class Arbol:
+class Tree:
     root = None
     left = None
     right = None    
-    
+
+    #constructor
     def __init__(self, root = None, left = None, right = None):
         self.root = root
         self.left = left
         self.right = right
-        
+
+    #añade un simbolo(variable o operador) al arbol    
     def addToTree(self, symbol):        
         if isfloat(symbol):
-            if self.left == None:
+            if self.right == None:
+                self.right = symbol               
+            elif self.left == None:
                 self.left = symbol                
-            elif self.right == None:
-                self.right = symbol                
             else:                
-                self.right.addToTree(symbol)
+                self.left.addToTree(symbol)                
         elif symbol in ('+','-','*','/','%'):
             if (self.root == None):
-                self.root = symbol
-            elif (self.right == None):
-                self.right = Arbol(symbol)
+                self.root = symbol                
+            elif (self.left == None):
+                self.left = Arbol(symbol)                
             else:
-                self.right.addToTree(symbol)            
+                self.left.addToTree(symbol)            
         else:
-             print('no es posible computar el input')
+             print('No es posible computar el input')
 
+#procesa una entrada, es decir, separa los datos ingresados en un arreglo para añadirlos iterativamente al arbol pasado como parametro
 def processInput(tree, string):
     array = string.split()
     array.reverse()
     for i in range(len(array)):
         tree.addToTree(array[i])
 
-def recorrer(tree):
-    if type(tree.right) is Arbol:         
+#recorre un arbol para devolver un resultado
+def travelsTree(tree):
+    if type(tree.left) is Tree:         
         if tree.root == '+':
-            return float(tree.left) + recorrer(tree.right)
+            return travelsTree(tree.left) + float(tree.right)
         elif tree.root == '-':            
-            return float(tree.left) - recorrer(tree.right)
+            return travelsTree(tree.left) - float(tree.right)
         elif tree.root == '*':
-            return float(tree.left)  * recorrer(tree.right)
+            return travelsTree(tree.left) * float(tree.right)
         elif tree.root == '/':
-            return float(tree.left) / recorrer(tree.right)
+            return travelsTree(tree.left) / float(tree.right)
         elif tree.root == '%':
-            return float(tree.left) % recorrer(tree.right)
+            return travelsTree(tree.left) % float(tree.right)
     else:       
         if tree.root == '+':
             return float(tree.left) + float(tree.right)
@@ -67,6 +71,6 @@ def recorrer(tree):
         elif tree.root == '%':
             return float(tree.left) % float(tree.right)        
 
-arbol = Arbol()
-processInput(arbol, input())
-print(recorrer(arbol))
+tree = Tree()
+processInput(tree, input("Digita el input\n"))
+print(travelsTree(tree))
